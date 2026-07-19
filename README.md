@@ -235,13 +235,23 @@ Open database shells:
 ~/.local/state/linux-ai-dev-setup/    Installation logs
 ```
 
-## Repository contents
+## Repository layout
 
 ```text
-linux-ai-dev-setup.sh   Main cross-distribution installer
-README.md               Installation, usage, and troubleshooting guide
-SHA256SUMS.txt          Integrity hashes for tracked release files
+linux-ai-dev-setup.sh       Executable entry point
+lib/00-bootstrap.sh         CLI parsing, distro detection, and safety checks
+lib/05-packages.sh          Cross-package-manager helper functions
+lib/10-system-packages.sh   Compilers, media, browsers, containers, and CLI tools
+lib/15-vscode.sh            VS Code repository and portable installation logic
+lib/20-miniforge.sh         Miniforge and base environment definition
+lib/25-ai-environments.sh   PyTorch, TensorFlow, JAX, CV, and ML tooling
+lib/30-web-codex.sh         Node.js, Angular, React tooling, Codex, and extensions
+lib/35-containers.sh        PostgreSQL and MongoDB service generation
+lib/40-desktop-finish.sh    Desktop apps, validation, and quick-start output
+SHA256SUMS.txt              Integrity hashes for tracked installer files
 ```
+
+The modular source files reassemble exactly into the original monolithic installer logic. Run only the top-level `linux-ai-dev-setup.sh` entry point.
 
 ## Safety notes
 
