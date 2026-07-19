@@ -10,7 +10,7 @@ if command -v fnm >/dev/null 2>&1 || [[ -x "${HOME}/.local/share/fnm/fnm" ]]; th
   FNM_BIN="$(command -v fnm 2>/dev/null || printf '%s' "${HOME}/.local/share/fnm/fnm")"
   eval "$("$FNM_BIN" env --shell bash)"
   "$FNM_BIN" install --lts
-  "$FNM_BIN" use --lts
+  "$FNM_BIN" use lts/latest
   CURRENT_NODE="$(node --version | sed 's/^v//')"
   "$FNM_BIN" default "$CURRENT_NODE"
   npm install --global npm@latest pnpm yarn typescript tsx @angular/cli
