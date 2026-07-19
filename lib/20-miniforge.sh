@@ -7,10 +7,23 @@ if [[ ! -x "${MINIFORGE_DIR}/bin/conda" ]]; then
     ppc64le) miniforge_arch="ppc64le" ;;
     *) die "Unsupported Miniforge architecture: ${ARCH}" ;;
   esac
-  installer="Miniforge3-Linux-${miniforge_arch}.sh"
-  base_url="https://github.com/conda-forge/miniforge/releases/latest/download"
-  curl -fL "${base_url}/${installer}" -o "${tmp_dir}/${installer}"
-  curl -fL "${base_url}/${installer}.sha256" -o "${tmp_dir}/${installer}.sha256"
+
+  latest_release_url="$(
+    curl -fsSLI --retry 3 --retry-delay 2 \
+      -o /dev/null -w '%{url_effective}' \
+      "https://github.com/conda-forge/miniforge/releases/latest"
+  )"
+  latest_release_url="${latest_release_url%/}"
+  miniforge_version="${latest_release_url##*/}"
+  [[ -n "$miniforge_version" && "$miniforge_version" != "latest" ]] \
+    || die "Could not determine the latest Miniforge release version."
+
+  installer="Miniforge3-${miniforge_version}-Linux-${miniforge_arch}.sh"
+  base_url="https://github.com/conda-forge/miniforge/releases/download/${miniforge_version}"
+  curl -fL --retry 3 --retry-delay 2 \
+    "${base_url}/${installer}" -o "${tmp_dir}/${installer}"
+  curl -fL --retry 3 --retry-delay 2 \
+    "${base_url}/${installer}.sha256" -o "${tmp_dir}/${installer}.sha256"
   (
     cd "$tmp_dir"
     sha256sum -c "${installer}.sha256"
